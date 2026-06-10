@@ -1,0 +1,361 @@
+# **Threat Detection Engineering (TDE)**
+
+## **1. Overview**
+
+Threat Detection Engineering focuses on designing, implementing, and continuously improving detection capabilities across enterprise environments, including **cloud, endpoint, identity, network, and AI ecosystems**.
+
+It combines:
+
+* Detection rules (SIEM/XDR)
+* Threat intelligence (CTI)
+* Behavioral analytics
+* Automation (SOAR)
+* AI/ML-driven detections
+
+---
+
+## **2. Detection of Social Engineering Attacks**
+
+* Monitor phishing indicators (email headers, malicious URLs, spoofed domains)
+* Detect anomalous user behavior (impossible travel, unusual access patterns)
+* Correlate identity signals (failed logins, MFA fatigue attacks)
+* Analyze user-reported incidents (phishing reporting tools)
+* Identify:
+
+  * Suspicious OAuth app consent
+  * Token theft / session hijacking
+  * AI-generated phishing (deepfake voice, synthetic emails)
+
+---
+
+## **3. Detection Challenges**
+
+* High false positives due to noisy telemetry
+* Increasing use of **legitimate tools (Living-off-the-Land attacks)**
+* Fragmented telemetry across tools (SIEM, XDR, CASB, CSPM)
+* Advanced adversaries using:
+
+  * Fileless malware
+  * Identity-based attacks
+  * AI-assisted evasion techniques
+* Need for deep expertise in:
+
+  * Threat hunting
+  * Log analysis
+  * Adversary TTPs (MITRE ATT&CK)
+
+---
+
+## **4. Detection in AI Ecosystems (New-Age Threats)**
+
+### **4.1 AI Infrastructure Threats**
+
+* Unauthorized access to ML pipelines or GPU resources
+* Model poisoning attacks
+* Data pipeline manipulation
+* Exposure of training datasets
+* Abuse of APIs hosting models
+
+**Detection Techniques:**
+
+* Monitor abnormal API usage patterns
+* Detect privilege escalation in ML platforms
+* Audit access to training datasets
+* Identify unusual compute consumption spikes
+
+---
+
+### **4.2 AI Application Threats**
+
+* Prompt injection attacks
+* Data exfiltration via LLM responses
+* Malicious plugin/API integrations
+* Abuse of AI-generated outputs
+
+**Detection Techniques:**
+
+* Monitor prompt/response anomalies
+* Detect sensitive data leakage patterns
+* Inspect API integrations and plugins
+* Log and analyze LLM interaction trails
+
+---
+
+### **4.3 AI Agent Threats**
+
+* Autonomous agents performing unintended actions
+* Privilege misuse by AI agents
+* Command chaining leading to exploitation
+
+**Detection Techniques:**
+
+* Track agent decision logs and actions
+* Detect abnormal automation sequences
+* Apply behavioral baselines for agent activities
+* Enforce policy-based execution boundaries
+
+---
+
+### **4.4 AI-Driven Threats**
+
+* Deepfake-based impersonation attacks
+* AI-generated phishing campaigns
+* Automated vulnerability discovery by attackers
+
+**Detection Techniques:**
+
+* Behavioral anomaly detection
+* Voice/video verification systems
+* Email content anomaly detection using NLP
+* Threat intelligence enrichment
+
+---
+
+## **5. Detection Engineering Lifecycle**
+
+### **5.1 Preparation**
+
+* Define detection use cases
+* Establish logging and telemetry sources:
+
+  * SIEM, XDR, EDR
+  * Identity logs
+  * Cloud logs
+  * AI system logs
+* Create baselines for normal behavior
+* Integrate threat intelligence feeds
+
+---
+
+### **5.2 Detection**
+
+* Analyze:
+
+  * Logs
+  * Alerts
+  * Network traffic
+  * Endpoint activity
+* Implement detection rules:
+
+  * IOC-based (known threats)
+  * Behavioral (anomaly detection)
+  * TTP-based (MITRE ATT&CK)
+
+---
+
+### **5.3 Initial Scoping**
+
+* Identify:
+
+  * Affected systems
+  * Impacted users/data
+* Determine severity
+* Notify incident response teams
+
+---
+
+### **5.4 Technical Analysis**
+
+* Develop hypothesis of attacker intent
+* Identify:
+
+  * Persistence mechanisms
+  * Lateral movement
+  * Data exfiltration paths
+* Validate against threat intelligence
+* Maintain a common operating picture across stakeholders
+
+---
+
+### **5.5 Event Correlation & Timeline**
+
+* Correlate logs across:
+
+  * Identity
+  * Network
+  * Endpoint
+  * Cloud
+* Build incident timeline:
+
+  * Events
+  * Timestamps (UTC)
+  * Impact
+  * Data sources
+
+---
+
+### **5.6 Anomaly Detection**
+
+* Identify deviations from baseline:
+
+  * Unusual login behavior
+  * Abnormal network traffic
+  * Suspicious process execution
+* Detect:
+
+  * Credential misuse
+  * Privilege escalation
+  * Living-off-the-land techniques
+
+---
+
+## **6. Detection Techniques**
+
+### **6.1 Identity-Based Detection**
+
+* Multiple failed login attempts
+* MFA bypass or fatigue
+* Impossible travel
+* Suspicious privilege assignments
+
+**Example Control:**
+
+* Lock account after repeated failed attempts
+* Alert on 5 failed logins within 2 minutes
+
+---
+
+### **6.2 Network Detection**
+
+* Suspicious outbound connections
+* Command-and-control traffic
+* Port scanning and lateral movement
+* DDoS patterns
+
+---
+
+### **6.3 Endpoint Detection**
+
+* File integrity monitoring (FIM)
+* Suspicious process execution
+* Malware signatures and heuristics
+* Unauthorized file changes
+
+---
+
+### **6.4 Cloud Detection**
+
+* Unauthorized resource creation
+* Misconfigurations
+* Suspicious API calls
+* Data exfiltration from storage services
+
+---
+
+### **6.5 AI-Specific Detection**
+
+* Prompt injection patterns
+* Model misuse
+* Data leakage via AI outputs
+* Abnormal agent actions
+
+---
+
+## **7. Investigation Techniques**
+
+* Log correlation across multiple sources
+* Threat hunting using hypotheses
+* Memory and disk forensics
+* IOC enrichment using CTI feeds
+* Behavioral analysis
+
+---
+
+## **8. Response Techniques**
+
+* Trigger SOAR playbooks
+* Isolate affected systems
+* Block malicious indicators (IP/domain/hash)
+* Disable compromised accounts
+* Notify stakeholders
+* Perform remediation and recovery
+
+---
+
+## **9. Sample Detection Use Cases (SIEM – Sentinel)**
+
+### **9.1 Failed Login Detection**
+
+* Alert on multiple failed login attempts
+* Auto-lock account after threshold
+
+---
+
+### **9.2 Anomalous RDP Detection**
+
+**Prerequisites:**
+
+* Collect Windows Security Logs (Event ID 4624)
+
+---
+
+### **9.3 Suspicious Azure Activity**
+
+```kusto
+AzureActivity
+| where OperationName == "Create Storage account"
+| where ActivityStatus == "Succeeded"
+```
+
+---
+
+### **9.4 Deleted Security Resources**
+
+```kusto
+AzureActivity
+| where OperationNameValue contains "SecurityInsights"
+| where OperationName contains "Delete"
+| where ActivityStatusValue contains "Succeeded"
+```
+
+---
+
+### **9.5 Rule Scheduling**
+
+* Run query every 1 hour
+* Enable suppression: stop after alert triggers
+
+---
+
+## **10. Best Practices**
+
+* Reduce false positives via tuning
+* Use MITRE ATT&CK mapping
+* Continuously improve detection rules
+* Automate response using SOAR
+* Integrate AI-driven analytics responsibly
+* Monitor AI systems as first-class attack surfaces
+* Maintain updated incident response plans
+
+---
+
+## **11. Key Metrics**
+
+* Mean Time to Detect (MTTD)
+* Mean Time to Respond (MTTR)
+* Detection coverage
+* False positive rate
+* Alert-to-incident ratio
+
+---
+
+## **12. Post-Incident Activities**
+
+* Conduct root cause analysis
+* Prepare after-action report
+* Update detection rules
+* Share lessons learned
+* Improve playbooks and controls
+
+---
+
+If you want, I can convert this into:
+
+* **SOC runbook format**
+* **Detection engineering playbook library**
+* **Sentinel + Defender rule pack**
+* **AI threat detection framework (very advanced, architecture-level)**
+
+
+
+<img width="509" height="282" alt="attack detection vs investigation" src="https://github.com/user-attachments/assets/5d95e4c5-db78-4658-a464-25145d759efd" />
